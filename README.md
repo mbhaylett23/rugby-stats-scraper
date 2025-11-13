@@ -1,31 +1,106 @@
-# Rugby Statistics Scraper 🏉🤖
+# 🏉 Rugby Statistics Scraper + 🤖 Generic LLM Scraping Framework
 
-An intelligent, AI-powered web scraper for collecting comprehensive international rugby match statistics from RugbyPass.
+**Two projects in one:**
+1. **Generic LLM-Assisted Web Scraping Framework** - Reusable for any website/domain
+2. **Rugby Statistics Scraper** - Complete implementation for RugbyPass data
 
-## Overview
+---
 
-This project uses **Gemini AI** as an intelligent agent to plan, validate, and self-correct during web scraping. Unlike traditional scrapers that blindly follow rules, this scraper uses LLM reasoning to:
-- 🧠 Understand what data to find and how to find it
-- ✅ Validate that scraped data is correct
-- 🔧 Self-heal when errors occur
-- 🎯 Adapt to website changes automatically
+## 🎯 Dual Purpose Project
 
-**Data Source:** [RugbyPass](https://www.rugbypass.com/) - Comprehensive match statistics for Tier 1 international rugby nations
+### Purpose 1: Generic Framework
+Build **any** intelligent web scraper by extending base classes. The framework handles:
+- ✅ LLM-powered planning and decision-making
+- ✅ Self-healing and retry logic
+- ✅ Validation and quality assurance
+- ✅ Flexible configuration and extension points
 
-## 🧠 How It Works
+### Purpose 2: Rugby Stats Scraper
+A **production-ready** scraper for international rugby match statistics:
+- 🏉 Scrapes comprehensive match stats from RugbyPass
+- 🤖 Uses AI to adapt to website changes
+- 🔧 Self-corrects when errors occur
+- 📊 Exports to CSV with full agent decision logs
 
-This is a **hybrid approach** combining the best of both worlds:
-- **Selenium** does the heavy lifting (browser automation, page loading, data extraction)
-- **Gemini AI** provides intelligence (planning, validation, correction)
+---
 
-**Key Capabilities:**
-- ✅ Plans how to find each match using AI reasoning
-- ✅ Validates extracted data for correctness
-- ✅ Self-corrects when errors occur
-- ✅ Adapts to website changes automatically
-- ✅ Learns from failures and tries alternatives
+## 🏗️ Project Structure
 
-## 🤖 Agent Workflow
+```
+rugby-stats-scraper/
+│
+├── llm_scraper/                 # 🎯 GENERIC FRAMEWORK
+│   ├── core/
+│   │   ├── base_scraper.py     # Extend this for your domain
+│   │   ├── llm_agent.py        # LLM interaction & reasoning
+│   │   ├── phases.py           # 5-phase workflow
+│   │   └── config.py           # Configuration management
+│   ├── utils/
+│   │   ├── browser.py          # Selenium utilities
+│   │   ├── extractors.py       # Data extraction helpers
+│   │   └── validators.py       # Validation helpers
+│   └── models/
+│       └── schemas.py          # Data models
+│
+├── rugby_scraper/               # 🏉 RUGBY IMPLEMENTATION
+│   ├── rugby_scraper.py        # Extends BaseLLMScraper
+│   ├── extractors.py           # Rugby-specific extraction
+│   └── config.yml              # Rugby configuration
+│
+├── docs/
+│   ├── FRAMEWORK.md            # How to build your own scraper
+│   └── RUGBY_USAGE.md          # Rugby scraper usage
+│
+├── run_rugby_scraper.py        # Main entry point
+├── matches_to_scrape.json      # Input data
+├── requirements.txt
+└── environment.yml
+```
+
+---
+
+## 🚀 Quick Start (Rugby Scraper)
+
+### 1. Setup Environment
+
+```bash
+# Clone repository
+git clone https://github.com/yourusername/rugby-stats-scraper.git
+cd rugby-stats-scraper
+
+# Create conda environment
+conda env create -f environment.yml
+conda activate rugby-scraper
+```
+
+### 2. Set API Key
+
+```bash
+# Get API key from https://aistudio.google.com/app/apikey
+
+# On Linux/Mac:
+export GEMINI_API_KEY='your-key-here'
+
+# On Windows PowerShell:
+[System.Environment]::SetEnvironmentVariable('GEMINI_API_KEY', 'your-key', 'User')
+```
+
+### 3. Run the Scraper
+
+```bash
+python run_rugby_scraper.py
+```
+
+That's it! The scraper will:
+1. Load matches from `matches_to_scrape.json`
+2. Use AI to find and validate each match
+3. Save results to CSV files
+
+---
+
+## 🧠 The 5-Phase Intelligent Workflow
+
+Every scrape follows this AI-powered workflow:
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
@@ -33,212 +108,81 @@ This is a **hybrid approach** combining the best of both worlds:
 └─────────────────────────────────────────────────────────────┘
 
 PHASE 1: PLANNING (LLM)
-├─ Analyze match details
-├─ Decide URL strategy
-├─ Handle team name variations
-└─ Create scraping plan
+├─ "How do I find this match?"
+├─ Analyzes available information (teams, date, URL)
+├─ Decides on URL strategy
+└─ Creates scraping plan
 
 PHASE 2: SCRAPING (Selenium)
-├─ Execute the plan
-├─ Load match page
-├─ Extract statistics
-└─ Capture page content
+├─ Executes the plan
+├─ Loads match page with browser
+├─ Extracts statistics using patterns
+└─ Captures page content
 
-PHASE 3: VALIDATION (LLM)
-├─ Check data correctness
-├─ Verify team names
-├─ Validate statistics logic
-├─ Identify missing data
-└─ Assess confidence level
+PHASE 3: VALIDATING (LLM)
+├─ "Is this data correct?"
+├─ Checks team names match
+├─ Validates statistics logic
+├─ Identifies missing/suspicious data
+└─ Assigns confidence score (0-100)
 
-PHASE 4: DECISION (LLM)
-├─ Evaluate validation results
-├─ Decide: ACCEPT, RETRY, or REJECT
-└─ Provide reasoning
+PHASE 4: DECIDING (LLM)
+├─ Evaluates validation results
+├─ Options: ACCEPT, RETRY, or REJECT
+├─ Confidence ≥80 → ACCEPT
+├─ Confidence 40-79 → RETRY
+└─ Confidence <40 → REJECT
 
-PHASE 5: CORRECTION (LLM) [if RETRY]
-├─ Analyze what went wrong
-├─ Suggest alternative URLs
-├─ Adjust team names
-└─ Create new plan
-
-→ Loop back to PHASE 1 (max 3 attempts)
+PHASE 5: CORRECTING (LLM) [if RETRY]
+├─ "What went wrong and how to fix it?"
+├─ Suggests alternative URLs
+├─ Adjusts team name spellings
+└─ Creates new plan → Back to PHASE 1
 ```
 
-## 🎯 Key Advantages
+---
 
-### 1. **Handles URL Variations**
-**Problem**: Game IDs change, URLs vary
-**Solution**: LLM intelligently constructs and tests URLs
+## 🎯 Why This Framework?
 
-### 2. **Adapts to HTML Changes**
-**Problem**: RugbyPass updates their website
-**Solution**: LLM understands context, not just patterns
-
-### 3. **Self-Validates Data**
-**Problem**: Scraped data might be wrong
-**Solution**: LLM checks if statistics make sense
-
-### 4. **Self-Corrects Errors**
-**Problem**: First attempt fails
-**Solution**: LLM suggests fixes and retries automatically
-
-### 5. **Handles Team Name Variations**
-**Problem**: "New Zealand" vs "All Blacks" vs "NZ"
-**Solution**: LLM understands equivalences
-
-## 🚀 Quick Start
-
-### Prerequisites
-
-```bash
-pip install selenium beautifulsoup4 pandas google-generativeai webdriver-manager
+### Traditional Scrapers
+```python
+# Brittle, breaks when website changes
+scraper.find_element_by_class('match-stats-2023')  # ❌ Class changed!
 ```
 
-### Get Gemini API Key
-
-1. Go to https://aistudio.google.com/app/apikey
-2. Create a new API key
-3. Set as environment variable:
-
-```bash
-export GEMINI_API_KEY='your-key-here'
+### LLM-Assisted Scraper (This Framework)
+```python
+# LLM understands context, adapts automatically
+agent.validate_data()  # ✅ Detects wrong data, suggests fixes
 ```
 
-Or use OpenAI API key (if you have Gemini access through OpenAI):
-```bash
-export OPENAI_API_KEY='your-key-here'
-```
+### Key Advantages
 
-### Run the Scraper
+| Feature | Traditional | LLM-Assisted |
+|---------|------------|--------------|
+| **Handles URL variations** | ❌ Fixed patterns | ✅ AI constructs URLs |
+| **Adapts to HTML changes** | ❌ Breaks easily | ✅ Understands context |
+| **Self-validates data** | ❌ No validation | ✅ Comprehensive checks |
+| **Self-corrects errors** | ❌ Manual fixes | ✅ Auto-retry with fixes |
+| **Handles name variations** | ❌ Exact matches only | ✅ Understands equivalences |
+| **Cost** | Free | ~$0.001-0.005 per target |
+| **Speed** | Fast | +5-10s overhead |
 
-```bash
-python intelligent_agent_scraper.py
-```
+---
 
-## 📊 Example Agent Workflow
+## 📊 Rugby Scraper Features
 
-### Match: France vs Wales (2025-01-31)
+### Comprehensive Statistics
+- **Scoring**: Tries, conversions, penalties, drop goals
+- **Possession**: Possession %, territory %
+- **Attack**: Carries, metres made, line breaks, defenders beaten
+- **Defense**: Tackles made/missed, turnovers won/conceded
+- **Set pieces**: Scrums won, lineouts won
+- **Discipline**: Penalties conceded, cards
 
-```
-PHASE 1: PLANNING
-  Strategy: direct_url
-  URL to try: https://www.rugbypass.com/live/france-vs-wales/stats/?g=944287
-  Reasoning: Game ID provided, use direct URL
+### Smart URL Discovery
+Don't have game IDs? No problem!
 
-PHASE 2: SCRAPING
-  Loading: https://www.rugbypass.com/live/france-vs-wales/stats/?g=944287
-  ✓ Found game_id: 944287
-  ✓ Extracted 11 statistics
-
-PHASE 3: VALIDATING
-  Valid: true
-  Confidence: 95%
-  Assessment: Data looks correct, all key stats present
-
-PHASE 4: DECIDING
-  Decision: ACCEPT
-  Reason: High confidence, no significant issues
-
-✓ Successfully scraped match!
-```
-
-### Match with Issues: Scotland vs Italy (wrong URL)
-
-```
-PHASE 1: PLANNING
-  Strategy: construct_url
-  URL to try: https://www.rugbypass.com/live/scotland-vs-italy/stats/?g=944288
-  Reasoning: Constructing URL from team names
-
-PHASE 2: SCRAPING
-  Loading: https://www.rugbypass.com/live/scotland-vs-italy/stats/?g=944288
-  ✓ Found game_id: 944288
-  ✓ Extracted 8 statistics
-
-PHASE 3: VALIDATING
-  Valid: false
-  Confidence: 45%
-  Issues: ["Missing key statistics", "Suspicious possession values"]
-  Assessment: Data incomplete, likely wrong page
-
-PHASE 4: DECIDING
-  Decision: RETRY
-  Reason: Low confidence, fixable issues
-  Suggested fixes: ["Try alternative URL", "Check team name spelling"]
-
-PHASE 5: CORRECTING
-  Corrections: Try "scotland-vs-italia" (Italian spelling)
-  Updated URL: https://www.rugbypass.com/live/scotland-vs-italia/stats/?g=944288
-
---- Attempt 2/3 ---
-
-PHASE 1: PLANNING
-  Strategy: direct_url
-  URL to try: https://www.rugbypass.com/live/scotland-vs-italia/stats/?g=944288
-  Reasoning: Using corrected team name
-
-PHASE 2: SCRAPING
-  ✓ Found game_id: 944288
-  ✓ Extracted 11 statistics
-
-PHASE 3: VALIDATING
-  Valid: true
-  Confidence: 90%
-  Assessment: Data now complete and correct
-
-PHASE 4: DECIDING
-  Decision: ACCEPT
-  Reason: High confidence after correction
-
-✓ Successfully scraped match on attempt 2!
-```
-
-## 📁 Output Files
-
-### Standard CSV Files
-1. **`matches_intelligent_TIMESTAMP.csv`** - Match information
-2. **`team_stats_intelligent_TIMESTAMP.csv`** - Team statistics
-3. **`player_stats_intelligent_TIMESTAMP.csv`** - Player statistics
-
-### Agent Decision Log
-4. **`agent_decisions_TIMESTAMP.json`** - Complete log of all agent decisions
-
-Example agent log:
-```json
-[
-  {
-    "phase": "PLAN",
-    "attempt": 1,
-    "plan": {
-      "strategy": "direct_url",
-      "url_to_try": "https://...",
-      "reasoning": "Game ID provided"
-    }
-  },
-  {
-    "phase": "VALIDATE",
-    "validation": {
-      "is_valid": true,
-      "confidence": 95,
-      "issues": [],
-      "overall_assessment": "Data looks correct"
-    }
-  },
-  {
-    "phase": "DECIDE",
-    "decision": {
-      "action": "ACCEPT",
-      "reason": "High confidence"
-    }
-  }
-]
-```
-
-## 💡 Use Cases
-
-### 1. **Scraping Without Game IDs**
-Just provide team names and date:
 ```json
 {
   "date": "2025-02-01",
@@ -247,222 +191,288 @@ Just provide team names and date:
   "competition": "Six Nations"
 }
 ```
-Agent will figure out the URL!
 
-### 2. **Handling Team Name Variations**
+The agent will:
+1. Construct likely URLs
+2. Try variations (scotland-vs-italy, scotland-vs-italia)
+3. Validate the right match was found
+4. Auto-correct if needed
+
+### Output Files
+
+```
+matches_intelligent_20250213_143022.csv      # Match information
+team_stats_intelligent_20250213_143022.csv   # Team statistics
+agent_decisions_20250213_143022.json         # LLM reasoning log
+```
+
+**Agent log example:**
 ```json
 {
-  "home": "All Blacks",  // Agent knows this is New Zealand
-  "away": "Springboks"   // Agent knows this is South Africa
+  "phase": "VALIDATE",
+  "validation": {
+    "is_valid": true,
+    "confidence": 95,
+    "assessment": "All statistics present and logical"
+  }
+},
+{
+  "phase": "DECIDE",
+  "decision": {
+    "action": "ACCEPT",
+    "reason": "High confidence, no significant issues"
+  }
 }
 ```
 
-### 3. **Recovering from Failures**
-If first URL fails, agent automatically:
-- Tries alternative team name spellings
-- Searches for the match
-- Adjusts URL patterns
+---
 
-### 4. **Validating Historical Data**
-Agent checks if scraped data makes sense:
-- Tries ≤ total score
-- Possession adds to ~100%
-- Tackles made > tackles missed (usually)
+## 🛠️ Building Your Own Scraper
+
+The framework is designed to be extended for **any website or domain**.
+
+### 4 Simple Steps:
+
+#### 1. Extend `BaseLLMScraper`
+```python
+from llm_scraper.core.base_scraper import BaseLLMScraper
+
+class MyDomainScraper(BaseLLMScraper):
+    pass  # Start here
+```
+
+#### 2. Implement 4 Abstract Methods
+- `get_planning_prompt()` - How to find content
+- `get_validation_prompt()` - What makes data valid
+- `execute_scraping()` - Extract the data
+- `save_results()` - Save the data
+
+#### 3. Create Domain-Specific Extractors
+```python
+from llm_scraper.utils.extractors import RegexExtractor
+
+extractor = RegexExtractor({
+    'price': r'\$(\d+\.\d{2})',
+    'rating': r'(\d+\.\d+)\s+stars'
+})
+```
+
+#### 4. Run Your Scraper
+```python
+config = ScraperConfig.from_env()
+scraper = MyDomainScraper(config)
+scraper.scrape_from_file('targets.json')
+scraper.save_results()
+```
+
+### Full Tutorial
+See **[docs/FRAMEWORK.md](docs/FRAMEWORK.md)** for complete guide with examples.
+
+---
 
 ## ⚙️ Configuration
 
-### Adjust Retry Attempts
-
-In `intelligent_agent_scraper.py`:
-```python
-max_retries = 3  # Change to 5 for more attempts
+### Environment Variables
+```bash
+export GEMINI_API_KEY='your-key'
+export LLM_MODEL='gemini-2.0-flash-exp'
+export MAX_RETRIES='3'
+export HEADLESS='true'
 ```
 
-### Adjust Validation Threshold
+### YAML Configuration
+```yaml
+# rugby_scraper/config.yml
+llm_model: "gemini-2.0-flash-exp"
+max_retries: 3
+confidence_threshold: 80
+headless_browser: false
 
-In `_phase_4_decide()`:
-```python
-# Current: ACCEPT if confidence ≥ 80
-# Change to: ACCEPT if confidence ≥ 70 (more lenient)
+custom_settings:
+  base_url: "https://www.rugbypass.com"
+  # Domain-specific settings
 ```
 
-### Use Different LLM Model
-
-```python
-self.model = genai.GenerativeModel('gemini-pro')  # Different model
+### Command Line
+```bash
+python run_rugby_scraper.py --headless --max-retries 5 --output-dir results/
 ```
+
+---
 
 ## 💰 Cost Analysis
 
-### Per Match
-- **API calls**: 3-5 per match (Plan, Validate, Decide, possibly Correct)
-- **Cost**: ~$0.001-0.005 per match (Gemini Flash is very cheap)
-- **Time**: +5-10 seconds per match (LLM overhead)
+### Per Match (Rugby)
+- **API calls**: 3-5 per match (Plan, Validate, Decide, maybe Correct)
+- **Cost**: ~$0.001-0.005 per match (Gemini Flash)
+- **Time**: +5-10 seconds LLM overhead
 
 ### For 15 Six Nations Matches
-- **Total API calls**: ~45-75
 - **Total cost**: ~$0.015-0.075 (less than 10 cents!)
-- **Total time**: ~5-10 minutes (vs 2-3 minutes for basic scraper)
+- **Time**: ~5-10 minutes total
+- **Value**: Self-healing scraper that works even when website changes
 
-### For 400 Historical Matches (5 years)
-- **Total cost**: ~$0.40-2.00
-- **Time saved from debugging**: Hours!
-
-## 🎓 When to Use Intelligent Agent vs Basic Scraper
-
-### Use **Intelligent Agent** When:
-✅ You don't have game IDs
-✅ Scraping historical matches with unknown URLs
-✅ Website structure changes frequently
-✅ You need high data quality assurance
-✅ You want self-healing capabilities
-
-### Use **Basic Scraper** When:
-✅ You have all game IDs and URLs
-✅ Scraping recent matches with known structure
-✅ You want maximum speed
-✅ You want to minimize API costs
-✅ You're comfortable debugging manually
-
-## 🔧 Troubleshooting
-
-### API Key Issues
-```bash
-# Check if key is set
-echo $GEMINI_API_KEY
-
-# Set temporarily
-export GEMINI_API_KEY='your-key-here'
-
-# Set permanently (add to ~/.bashrc or ~/.zshrc)
-echo 'export GEMINI_API_KEY="your-key-here"' >> ~/.bashrc
-```
-
-### Agent Always Rejects Data
-- Check `agent_decisions_TIMESTAMP.json` for reasons
-- Lower confidence threshold in code
-- Verify match details are correct
-
-### Agent Takes Too Long
-- Reduce `max_retries` from 3 to 2
-- Use faster LLM model (gemini-flash)
-- Increase validation confidence threshold
-
-## 📈 Advanced Features
-
-### Custom Validation Rules
-
-Add your own validation logic:
-```python
-def _phase_3_validate(self, match_info, scraped_data):
-    # ... existing code ...
-    
-    # Add custom check
-    if scraped_data['team_stats'][0]['tries'] > 10:
-        validation['issues'].append("Unusually high tries count")
-        validation['confidence'] -= 10
-    
-    return validation
-```
-
-### Multi-Source Validation
-
-Validate against multiple sources:
-```python
-def _phase_3_validate_multi_source(self, match_info, scraped_data):
-    # Scrape from ESPN too
-    espn_data = self.scrape_espn(match_info)
-    
-    # Compare with RugbyPass data
-    if scraped_data['score'] != espn_data['score']:
-        validation['issues'].append("Score mismatch with ESPN")
-```
-
-## 🎉 Benefits Summary
-
-| Feature | Basic Scraper | Intelligent Agent |
-|---------|--------------|-------------------|
-| **Speed** | ⚡⚡⚡ Fast | ⚡⚡ Moderate |
-| **Robustness** | ⭐⭐ Fragile | ⭐⭐⭐ Robust |
-| **Self-Healing** | ❌ No | ✅ Yes |
-| **URL Discovery** | ❌ Manual | ✅ Automatic |
-| **Data Validation** | ❌ None | ✅ Comprehensive |
-| **Adaptability** | ❌ Fixed rules | ✅ AI-powered |
-| **Cost** | 💰 Free | 💰 ~$0.001/match |
-| **Setup** | ✅ Simple | ⚙️ Needs API key |
-
-## 🚀 Next Steps
-
-1. **Test with sample matches**
-   ```bash
-   python intelligent_agent_scraper.py
-   ```
-
-2. **Review agent decisions**
-   ```bash
-   cat agent_decisions_TIMESTAMP.json | jq
-   ```
-
-3. **Analyze results**
-   ```python
-   import pandas as pd
-   df = pd.read_csv('matches_intelligent_TIMESTAMP.csv')
-   print(df.head())
-   ```
-
-4. **Scale to more matches**
-   - Add more matches to `matches_to_scrape.json`
-   - Let the agent handle URL discovery automatically
-
-## 📝 Example: Scraping Without Game IDs
-
-Create `matches_unknown_ids.json`:
-```json
-[
-  {
-    "date": "2025-02-01",
-    "home": "Scotland",
-    "away": "Italy",
-    "competition": "Six Nations"
-  },
-  {
-    "date": "2025-02-01",
-    "home": "Ireland",
-    "away": "England",
-    "competition": "Six Nations"
-  }
-]
-```
-
-Run:
-```bash
-python intelligent_agent_scraper.py
-```
-
-The agent will:
-1. **Plan**: Construct likely URLs
-2. **Scrape**: Try each URL
-3. **Validate**: Check if data matches expected match
-4. **Decide**: Accept if correct, retry if wrong
-5. **Correct**: Try alternative URLs if needed
-
-**No manual URL finding required!** 🎉
+### Worth It When:
+✅ Website changes frequently
+✅ Don't have all URLs/IDs
+✅ Need high data quality
+✅ Want to minimize maintenance
+✅ Scraping 100s-1000s of targets
 
 ---
 
-## 🤖 The Future of Web Scraping
+## 📈 Use Cases
 
-This intelligent agent approach represents the future of web scraping:
+### Rugby Scraper
+- Historical match analysis
+- Team performance tracking
+- Player statistics aggregation
+- Tournament analytics
 
-- **Less brittle**: Adapts to changes automatically
-- **More intelligent**: Understands context, not just patterns
-- **Self-healing**: Fixes issues without human intervention
-- **Scalable**: Can handle thousands of matches with minimal supervision
+### Framework (Build Your Own)
+- **E-commerce**: Product prices, reviews, availability
+- **News**: Article scraping with validation
+- **Social Media**: Public post aggregation
+- **Sports**: Any sports statistics (football, cricket, etc.)
+- **Real Estate**: Listings with price/location data
+- **Job Boards**: Job postings with details
+- **Research**: Academic paper metadata
 
-**The small API cost is worth the massive time savings in maintenance and debugging!**
+**Any website where structure might change or data needs validation.**
 
 ---
 
-**Ready to scrape intelligently! 🏉🤖📊**
+## 🧪 Example: Agent Self-Correction
 
-*Created November 2025 - The next generation of rugby statistics collection*
+```
+Match: Scotland vs Italy (wrong URL initially)
+
+ATTEMPT 1:
+  Plan: Try https://rugbypass.com/.../scotland-vs-italy/...
+  Scrape: ✓ Got data
+  Validate: ❌ Confidence 45% - "Wrong team names detected"
+  Decide: RETRY
+  Correct: "Try 'italia' (Italian spelling)"
+
+ATTEMPT 2:
+  Plan: Try https://rugbypass.com/.../scotland-vs-italia/...
+  Scrape: ✓ Got data
+  Validate: ✓ Confidence 90% - "Data complete and correct"
+  Decide: ACCEPT
+
+✓ Successfully scraped on attempt 2!
+```
+
+---
+
+## 🔧 Development
+
+### Run Tests
+```bash
+pytest tests/
+```
+
+### Add New Extractor
+```python
+# rugby_scraper/extractors.py
+class PlayerStatsExtractor:
+    def extract(self, soup, page_text):
+        # Implement extraction logic
+        pass
+```
+
+### Improve Prompts
+Edit prompts in `rugby_scraper/rugby_scraper.py`:
+- `get_planning_prompt()`
+- `get_validation_prompt()`
+- `get_correction_prompt()`
+
+---
+
+## 📚 Documentation
+
+- **[FRAMEWORK.md](docs/FRAMEWORK.md)** - Complete framework guide
+- **[README.md](README.md)** - This file (getting started)
+- **Code comments** - Comprehensive docstrings
+
+---
+
+## 🤝 Contributing
+
+We welcome contributions!
+
+### Add a New Domain Implementation
+1. Create `my_domain_scraper/` directory
+2. Extend `BaseLLMScraper`
+3. Implement required methods
+4. Add documentation
+5. Submit PR
+
+### Improve the Framework
+1. New extractors/validators in `llm_scraper/utils/`
+2. New LLM providers in `llm_scraper/core/llm_agent.py`
+3. Enhanced error handling
+4. Performance optimizations
+
+---
+
+## 🌟 Star Features
+
+- **🧠 AI-Powered**: LLM makes intelligent decisions at every step
+- **🔧 Self-Healing**: Auto-corrects errors, tries alternatives
+- **🎯 Extensible**: Build your own scraper in <100 lines
+- **📊 Observable**: Complete logs of LLM reasoning
+- **⚙️ Configurable**: YAML, env vars, CLI options
+- **🏗️ Production-Ready**: Error handling, logging, retry logic
+- **📦 Batteries Included**: Extractors, validators, browser management
+
+---
+
+## 🎓 Learn More
+
+### Understanding LLM-Assisted Scraping
+1. Read [FRAMEWORK.md](docs/FRAMEWORK.md) - Comprehensive guide
+2. Study `rugby_scraper/` - Reference implementation
+3. Review `agent_decisions_*.json` - See LLM reasoning
+4. Build your own - Start with a simple domain
+
+### When to Use This vs Traditional Scraper
+**Use LLM-assisted when:**
+- Website structure changes frequently
+- You need self-validation of data
+- URLs/IDs are unknown or variable
+- You want to minimize maintenance
+
+**Use traditional when:**
+- Website is stable and well-documented
+- You need maximum speed (no LLM overhead)
+- Working with APIs (not scraping HTML)
+- Cost is a primary concern
+
+---
+
+## 📜 License
+
+[Your License Here]
+
+---
+
+## 🙏 Acknowledgments
+
+- Built with **Gemini AI** for intelligent decision-making
+- Uses **Selenium** for browser automation
+- Inspired by the need for more robust web scraping
+
+---
+
+## 📞 Support
+
+- **Issues**: [GitHub Issues](https://github.com/yourusername/rugby-stats-scraper/issues)
+- **Discussions**: [GitHub Discussions](https://github.com/yourusername/rugby-stats-scraper/discussions)
+- **Documentation**: [docs/](docs/)
+
+---
+
+**Built with ❤️ for intelligent web scraping**
+
+*Create your own scraper in minutes, not days.*
