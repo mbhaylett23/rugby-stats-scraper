@@ -1,0 +1,137 @@
+[
+  {
+    "date": "2025-01-31",
+    "home": "France",
+    "away": "Wales",
+    "home_score": 43,
+    "away_score": 0,
+    "competition": "Six Nations",
+    "url": "https://www.rugbypass.com/live/france-vs-wales/stats/?g=944287"
+  },
+  {
+    "date": "2025-02-01",
+    "home": "Scotland",
+    "away": "Italy",
+    "home_score": 31,
+    "away_score": 19,
+    "competition": "Six Nations",
+    "url": "https://www.rugbypass.com/live/scotland-vs-italy/stats/?g=944288"
+  },
+  {
+    "date": "2025-02-01",
+    "home": "Ireland",
+    "away": "England",
+    "home_score": 27,
+    "away_score": 22,
+    "competition": "Six Nations",
+    "url": "https://www.rugbypass.com/live/ireland-vs-england/stats/?g=944289"
+  },
+  {
+    "date": "2025-02-08",
+    "home": "Italy",
+    "away": "Wales",
+    "home_score": 22,
+    "away_score": 15,
+    "competition": "Six Nations",
+    "url": "https://www.rugbypass.com/live/italy-vs-wales/stats/?g=944290"
+  },
+  {
+    "date": "2025-02-08",
+    "home": "England",
+    "away": "France",
+    "home_score": 26,
+    "away_score": 25,
+    "competition": "Six Nations",
+    "url": "https://www.rugbypass.com/live/england-vs-france/stats/?g=944291"
+  },
+  {
+    "date": "2025-02-09",
+    "home": "Scotland",
+    "away": "Ireland",
+    "home_score": 18,
+    "away_score": 32,
+    "competition": "Six Nations",
+    "url": "https://www.rugbypass.com/live/scotland-vs-ireland/stats/?g=944292"
+  },
+  {
+    "date": "2025-02-22",
+    "home": "Wales",
+    "away": "Ireland",
+    "home_score": 20,
+    "away_score": 28,
+    "competition": "Six Nations",
+    "url": "https://www.rugbypass.com/live/wales-vs-ireland/stats/?g=944293"
+  },
+  {
+    "date": "2025-02-22",
+    "home": "England",
+    "away": "Scotland",
+    "home_score": 21,
+    "away_score": 27,
+    "competition": "Six Nations",
+    "url": "https://www.rugbypass.com/live/england-vs-scotland/stats/?g=944294"
+  },
+  {
+    "date": "2025-02-23",
+    "home": "France",
+    "away": "Italy",
+    "home_score": 37,
+    "away_score": 17,
+    "competition": "Six Nations",
+    "url": "https://www.rugbypass.com/live/france-vs-italy/stats/?g=944295"
+  },
+  {
+    "date": "2025-03-08",
+    "home": "Italy",
+    "away": "Ireland",
+    "home_score": 17,
+    "away_score": 34,
+    "competition": "Six Nations",
+    "url": "https://www.rugbypass.com/live/italy-vs-ireland/stats/?g=944296"
+  },
+  {
+    "date": "2025-03-08",
+    "home": "Scotland",
+    "away": "France",
+    "home_score": 19,
+    "away_score": 30,
+    "competition": "Six Nations",
+    "url": "https://www.rugbypass.com/live/scotland-vs-france/stats/?g=944297"
+  },
+  {
+    "date": "2025-03-09",
+    "home": "Wales",
+    "away": "England",
+    "home_score": 21,
+    "away_score": 28,
+    "competition": "Six Nations",
+    "url": "https://www.rugbypass.com/live/wales-vs-england/stats/?g=944298"
+  },
+  {
+    "date": "2025-03-15",
+    "home": "Ireland",
+    "away": "France",
+    "home_score": 22,
+    "away_score": 22,
+    "competition": "Six Nations",
+    "url": "https://www.rugbypass.com/live/ireland-vs-france/stats/?g=944299"
+  },
+  {
+    "date": "2025-03-15",
+    "home": "Scotland",
+    "away": "Wales",
+    "home_score": 28,
+    "away_score": 21,
+    "competition": "Six Nations",
+    "url": "https://www.rugbypass.com/live/scotland-vs-wales/stats/?g=944300"
+  },
+  {
+    "date": "2025-03-15",
+    "home": "England",
+    "away": "Italy",
+    "home_score": 29,
+    "away_score": 14,
+    "competition": "Six Nations",
+    "url": "https://www.rugbypass.com/live/england-vs-italy/stats/?g=944301"
+  }
+]
