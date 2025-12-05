@@ -1,0 +1,50 @@
+# Rugby Scraper Configuration
+# ============================
+
+# LLM Settings
+llm_provider: "gemini"
+llm_model: "gemini-2.0-flash-exp"
+# llm_api_key: "your-key-here"  # Or set GEMINI_API_KEY environment variable
+
+# Scraping Settings
+max_retries: 3
+retry_delay: 2  # seconds
+headless_browser: false
+browser_timeout: 30  # seconds
+
+# Validation Settings
+confidence_threshold: 80  # 0-100
+
+# Logging & Output
+log_level: "INFO"  # DEBUG, INFO, WARNING, ERROR
+output_dir: "."
+
+# Rugby-Specific Settings
+custom_settings:
+  # Target website
+  base_url: "https://www.rugbypass.com"
+
+  # Data to extract
+  extract_player_stats: false  # Not yet implemented
+  extract_team_lineups: false  # Not yet implemented
+
+  # Validation rules
+  max_tries_per_team: 15
+  max_possession_percentage: 100
+
+  # Team name mappings (for URL construction)
+  team_name_mappings:
+    "New Zealand": "new-zealand"
+    "All Blacks": "new-zealand"
+    "South Africa": "south-africa"
+    "Springboks": "south-africa"
+    "Ireland": "ireland"
+    "England": "england"
+    "France": "france"
+    "Wales": "wales"
+    "Scotland": "scotland"
+    "Italy": "italy"
+    "Australia": "australia"
+    "Wallabies": "australia"
+    "Argentina": "argentina"
+    "Pumas": "argentina"

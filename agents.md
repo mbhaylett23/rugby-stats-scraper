@@ -4,56 +4,64 @@
 
 This document defines specialized AI agents for managing and extending the Rugby Statistics scraping and analysis project. Each agent has specific expertise and responsibilities.
 
-**NEW in Version 2.0:** Added LLM Intelligence Agent with Gemini API integration for self-healing, adaptive scraping.
+**Version 3.0 Updates:**
+- ✅ Refactored into generic LLM scraping framework + rugby implementation
+- ✅ Framework-first architecture (reusable for any domain)
+- ✅ Modular structure with clear separation of concerns
+- ✅ Updated agent responsibilities for framework vs domain work
+
+**Version 2.0:** Added LLM Intelligence Agent with Gemini API integration for self-healing, adaptive scraping.
 
 ---
 
 ## 🤖 Agent Definitions
 
-### 1. **LLM Intelligence Agent** 🧠 **(NEW - Primary for Advanced Scraping)**
+### 1. **LLM Framework Agent** 🧠 **(PRIMARY - Framework Development)**
 
-**Role:** AI-powered decision-making and adaptive scraping coordinator
+**Role:** Generic LLM scraping framework architect and developer
 
 **Expertise:**
-- Google Gemini API integration (gemini-2.0-flash-exp)
-- LLM prompt engineering for web scraping tasks
-- Intelligent planning and strategy selection
-- Data validation and confidence assessment
-- Self-correction and adaptive retry logic
-- Natural language understanding for team name variations
-- Autonomous URL discovery without game_ids
-- Multi-phase agent workflow orchestration
+- Generic framework design and architecture
+- LLM integration (Gemini, OpenAI, Anthropic)
+- Abstract base class design and patterns
+- Reusable component development
+- LLM prompt engineering for web scraping
+- Multi-phase workflow orchestration (Plan → Scrape → Validate → Decide → Correct)
+- Configuration management and extensibility
+- Framework documentation and tutorials
 
 **Responsibilities:**
-- **PHASE 1 - PLAN:** Analyze match details and decide URL strategies
-- **PHASE 2 - SCRAPE:** Execute scraping plan using Selenium
-- **PHASE 3 - VALIDATE:** Check scraped data correctness using AI reasoning
-- **PHASE 4 - DECIDE:** Determine whether to accept, retry, or reject data
-- **PHASE 5 - CORRECT:** Suggest fixes and alternative approaches
-- Handle team name variations ("All Blacks" = "New Zealand", "Springboks" = "South Africa")
-- Discover URLs automatically when game_ids are unknown
-- Maintain agent decision logs for transparency and debugging
-- Adapt to website structure changes without code updates
-- Self-heal when scraping failures occur
+- **Framework Core:** Maintain `llm_scraper/core/`
+  - `base_scraper.py` - Abstract base class for all scrapers
+  - `llm_agent.py` - LLM interaction and decision-making
+  - `phases.py` - 5-phase workflow executor
+  - `config.py` - Configuration management
+- **Framework Utils:** Maintain `llm_scraper/utils/`
+  - `browser.py` - Browser automation utilities
+  - `extractors.py` - Generic data extractors
+  - `validators.py` - Generic validators
+- **Data Models:** Maintain `llm_scraper/models/`
+  - `schemas.py` - ScrapingPlan, ScrapedData, ValidationResult, etc.
+- **Documentation:** Framework guides and tutorials
+- **Extensibility:** Ensure framework works for any domain
 
 **Key Files:**
-- `intelligent_agent_scraper.py` (645 lines, main intelligent scraper)
-- `README_INTELLIGENT_AGENT.md` (comprehensive guide)
-- `COMPARISON_GUIDE.md` (basic vs intelligent comparison)
-- `requirements_intelligent.txt` (includes google-generativeai)
-- `agent_decisions_TIMESTAMP.json` (output decision logs)
-- `intelligent_scraping_log.txt` (detailed agent logs)
+- `llm_scraper/core/*.py` (framework core, ~1100 lines total)
+- `llm_scraper/utils/*.py` (utilities, ~550 lines total)
+- `llm_scraper/models/schemas.py` (data models, ~160 lines)
+- `docs/FRAMEWORK.md` (complete framework guide)
+- `CLAUDE_DEV_GUIDE.md` (development practices)
 
 **Prompts to Use:**
 ```
-"Scrape these matches without game_ids using intelligent agent"
-"Validate the scraped data quality and show confidence scores"
-"Why did the agent retry match X? Check the decision log"
-"Adjust the confidence threshold for validation to 70%"
-"Add custom validation rules for unusually high try counts"
-"Make the agent try 5 alternative URLs before giving up"
-"Use intelligent agent to find all 2024 matches automatically"
-"Analyze the agent decision log to understand failure patterns"
+"Add support for OpenAI API in addition to Gemini in llm_agent.py"
+"Create a new generic extractor for JSON-LD data in web pages"
+"Add retry logic with exponential backoff to the phase executor"
+"Design a validator for checking data completeness"
+"Refactor base_scraper.py to support async scraping"
+"Add caching layer for LLM responses to reduce API costs"
+"Create a tutorial in FRAMEWORK.md for building a new scraper"
+"Review the framework architecture and suggest improvements"
 ```
 
 **API Configuration:**
@@ -73,90 +81,99 @@ This document defines specialized AI agents for managing and extending the Rugby
 
 ---
 
-### 2. **Data Collection Agent** 🔍 **(Traditional/Basic Scraper)**
+### 2. **Domain Implementation Agent** 🏉 **(Rugby Scraper Development)**
 
-**Role:** Web scraping specialist and data acquisition expert
+**Role:** Domain-specific scraper implementation specialist
 
 **Expertise:**
-- Selenium browser automation
-- BeautifulSoup HTML parsing
-- Regex pattern matching for statistics extraction
-- ChromeDriver management and troubleshooting
-- Rate limiting and ethical scraping practices
-- Direct URL scraping with known game_ids
+- Extending BaseLLMScraper for specific domains
+- Domain-specific data extraction (rugby, football, cricket, etc.)
+- Prompt engineering for domain validation
+- Website-specific scraping strategies
+- Data schema design for domain statistics
+- Performance optimization for domain-specific patterns
 
 **Responsibilities:**
-- Maintain and update `rugbypass_scraper.py` (basic scraper)
-- Add new statistical fields to extraction logic
-- Find and validate game_ids for historical matches
-- Troubleshoot scraping errors and timeouts
-- Update `matches_to_scrape.json` configurations
-- Monitor RugbyPass website changes and adapt scraper
-- Use when URLs/game_ids are known and speed is priority
-- Extract 90+ team statistics and player stats
+- **Rugby Implementation:** Maintain `rugby_scraper/`
+  - `rugby_scraper.py` - RugbyStatsScraper (extends BaseLLMScraper)
+  - `extractors.py` - Rugby-specific extraction logic
+  - `config.yml` - Rugby scraper configuration
+- **Domain Methods:** Implement required abstract methods
+  - `get_planning_prompt()` - Rugby-specific planning
+  - `get_validation_prompt()` - Rugby-specific validation
+  - `execute_scraping()` - Rugby data extraction
+  - `save_results()` - Save rugby statistics to CSV
+- **New Domains:** Create scrapers for other sports/domains
+- **Extraction Logic:** Domain-specific regex, selectors, parsers
+- **Data Quality:** Domain-specific validation rules
 
 **Key Files:**
-- `rugbypass_scraper.py` (500+ lines, traditional scraper)
-- `test_single_match.py`
-- `matches_to_scrape.json`
-- `requirements.txt` (basic dependencies)
-- `scraping_log.txt`
+- `rugby_scraper/rugby_scraper.py` (~184 lines)
+- `rugby_scraper/extractors.py` (~164 lines)
+- `rugby_scraper/config.yml` (configuration)
+- `run_rugby_scraper.py` (CLI entry point)
+- `matches_to_scrape.json` (input data)
 
 **Prompts to Use:**
 ```
-"Find all 2024 Six Nations match URLs and game_ids"
-"Add player position extraction to the scraper"
-"The scraper is timing out on match X, debug the issue"
-"Adapt scraper for Rugby Championship match format"
-"Extract kick success rates from match statistics"
-"Run basic scraper for 15 matches with known URLs (fast mode)"
-"Update regex pattern for new RugbyPass HTML structure"
+"Add extraction for player substitutions in rugby_scraper/extractors.py"
+"Create a football scraper by extending BaseLLMScraper"
+"Update rugby validation prompt to handle partial data better"
+"Add support for Rugby Championship URL format in planning prompt"
+"Extract kick success rates in RugbyStatsExtractor"
+"Create cricket_scraper/ implementing all required methods"
+"Optimize regex patterns in rugby extractors for performance"
 ```
 
 **When to Use:**
-- ✅ Have all game_ids and URLs
-- ✅ Recent matches with stable structure
-- ✅ Need maximum speed (2-3 min for 15 matches)
-- ✅ Want to avoid API costs
-- ✅ Scraping 100+ matches with known URLs
+- ✅ Building new domain-specific scrapers
+- ✅ Adding features to rugby scraper
+- ✅ Improving extraction accuracy
+- ✅ Adapting to website changes
+- ✅ Creating domain-specific validators
 
 ---
 
 ### 3. **Data Architecture Agent** 🏗️
 
-**Role:** Database design and data structure specialist
+**Role:** Data models and schema design specialist
 
 **Expertise:**
-- CSV schema design and normalization
-- Relational data modeling with game_id linking
-- Data validation and integrity checks
-- Field naming conventions and documentation
-- ETL (Extract, Transform, Load) processes
-- Agent decision log schema design
+- Dataclass and schema design (Python)
+- Data model abstraction and reusability
+- Type system design (typing module)
+- CSV/JSON schema design
+- Data validation and integrity
+- Configuration schema design
+- Data flow architecture
 
 **Responsibilities:**
-- Maintain data structure documentation
-- Design new tables/fields for additional statistics
-- Ensure referential integrity across CSV files
-- Define data types and validation rules
-- Handle missing data strategies (NULL handling)
-- Optimize data storage and file formats
-- Design schema for agent decision logs (JSON format)
+- **Data Models:** Maintain `llm_scraper/models/schemas.py`
+  - ScrapingPlan, ScrapedData, ValidationResult
+  - AgentDecision, CorrectionSuggestion
+  - Enums (DecisionAction, ScrapeStrategy)
+- **Configuration Models:** Design ScraperConfig schema
+- **Domain Schemas:** Design domain-specific data structures
+- **Output Formats:** CSV/JSON schema for results
+- **Type Safety:** Ensure proper type hints throughout
+- **Data Validation:** Define validation rules for models
+- **Documentation:** Document all data structures
 
 **Key Files:**
-- `data_structure_complete.md` (if exists)
-- `rugbypass_stats_structure.md` (if exists)
-- Output CSV files (matches, team_stats, player_stats)
-- Agent decision log JSON files
+- `llm_scraper/models/schemas.py` (~160 lines)
+- `llm_scraper/core/config.py` (ScraperConfig)
+- Domain output schemas (CSV structure)
+- Agent decision log formats
 
 **Prompts to Use:**
 ```
-"Design schema for adding player positions to player_stats.csv"
-"How should we handle matches with missing referee information?"
-"Create a new table for match weather conditions"
-"Validate that all game_ids in team_stats exist in matches"
-"Design a normalized structure for ruck speed statistics"
-"Design schema for storing agent validation confidence scores"
+"Add a new field to ScrapingPlan for alternative URLs"
+"Design a schema for storing player substitution events"
+"Create a dataclass for match weather conditions"
+"Add validation to ensure confidence is 0-100 in ValidationResult"
+"Design the schema for storing retry attempts in decision logs"
+"Create a configuration schema for rate limiting settings"
+"Add type hints for optional vs required fields in ScrapedData"
 ```
 
 ---
@@ -205,82 +222,89 @@ This document defines specialized AI agents for managing and extending the Rugby
 **Role:** Planning, documentation, and workflow coordinator
 
 **Expertise:**
-- Project roadmap planning
+- Project architecture planning
 - Documentation writing and maintenance
-- Task prioritization and sequencing
-- Progress tracking and reporting
+- Framework vs domain task prioritization
+- Multi-agent workflow coordination
+- Roadmap planning for framework and domains
 - User requirement gathering
-- Scraper strategy selection (basic vs intelligent)
+- Development guide maintenance
 
 **Responsibilities:**
-- Maintain README.md and QUICKSTART.md
-- Update documentation for new LLM features
-- Create delivery summaries
-- Plan data collection phases (2025 → 2024 → 2020-2023)
-- Track completed vs. pending matches
-- Document known issues and limitations
-- Guide users on when to use basic vs intelligent scraper
-- Maintain comparison guides
+- **Documentation:** Maintain all project documentation
+  - `README.md` - Project overview and dual-purpose explanation
+  - `docs/FRAMEWORK.md` - Complete framework guide
+  - `CLAUDE_DEV_GUIDE.md` - Development best practices
+  - `agents.md` - This file (agent definitions)
+- **Planning:** Coordinate framework and domain development
+- **Architecture:** Document design decisions
+- **Onboarding:** Help new contributors understand the structure
+- **Workflow:** Define collaboration between agents
+- **Strategy:** Guide framework vs domain work division
 
 **Key Files:**
-- `README.md`
-- `QUICKSTART.md`
-- `README_INTELLIGENT_AGENT.md`
-- `COMPARISON_GUIDE.md`
-- `DELIVERY_SUMMARY.md`
+- `README.md` (main project documentation)
+- `docs/FRAMEWORK.md` (framework tutorial)
+- `CLAUDE_DEV_GUIDE.md` (development guide)
+- `agents.md` (agent system)
+- `README_OLD.md` (historical reference)
 
 **Prompts to Use:**
 ```
-"Create a roadmap for collecting all 2020-2024 data"
-"Update README with new intelligent agent capabilities"
-"What matches are we still missing from Six Nations 2024?"
-"Write user documentation for the LLM agent workflow"
-"Create a troubleshooting guide for Gemini API issues"
-"Should I use basic or intelligent scraper for this task?"
-"Document the hybrid approach: intelligent for discovery, basic for bulk"
+"Update README to explain the framework architecture"
+"Create a quickstart guide for building a new domain scraper"
+"Document the decision to separate framework from domain logic"
+"Plan the roadmap for adding async support to the framework"
+"Write a guide for contributing new extractors to the framework"
+"Update FRAMEWORK.md with cricket scraper example"
+"Create a troubleshooting guide for common issues"
 ```
 
 ---
 
 ### 6. **Quality Assurance Agent** ✅
 
-**Role:** Testing, validation, and error handling specialist
+**Role:** Testing, validation, and code quality specialist
 
 **Expertise:**
-- Unit testing and integration testing
-- Data validation and quality checks
-- Error handling and logging
+- Unit testing and integration testing (pytest)
+- Code quality and linting (pylint, mypy)
+- Type checking and validation
+- Error handling patterns
 - Edge case identification
-- Regression testing
-- LLM validation confidence analysis
+- Framework testing strategies
+- Mock/fixture creation for LLM responses
 
 **Responsibilities:**
-- Write and maintain test scripts
-- Validate scraped data accuracy
-- Check for duplicate records
-- Test scraper on edge cases (old matches, different competitions)
-- Review scraping logs for errors
-- Ensure CSV output integrity
-- Validate agent decision logs for correctness
-- Compare data quality between basic and intelligent scrapers
+- **Testing:** Create and maintain test suite
+  - Unit tests for framework components
+  - Integration tests for domain scrapers
+  - Mock LLM responses for testing
+- **Quality:** Ensure code quality standards
+  - Type hints on all functions
+  - Proper error handling
+  - Consistent naming conventions
+- **Validation:** Test framework extensibility
+  - Verify new domains can extend framework
+  - Test with various configurations
+  - Edge case coverage
+- **CI/CD:** Set up automated testing (future)
 
 **Key Files:**
-- `test_single_match.py`
-- `scraping_log.txt`
-- `intelligent_scraping_log.txt`
-- `agent_decisions_TIMESTAMP.json`
-- Test fixtures and mock data (to be created)
+- `tests/` (test suite, to be created)
+- Test fixtures and mocks (to be created)
+- `.github/workflows/` (CI/CD, future)
 
 **Prompts to Use:**
 ```
-"Write unit tests for the statistics extraction functions"
-"Validate that all 2025 Six Nations matches were scraped correctly"
-"Check for duplicate game_ids in the output files"
-"Test the scraper on a match with incomplete statistics"
-"Create validation rules for all 90 team statistics fields"
-"Compare data quality between basic and intelligent scraper outputs"
-"Analyze agent decision logs to identify validation issues"
-"Test intelligent agent with matches that have no game_ids"
+"Write unit tests for llm_scraper/utils/extractors.py"
+"Create mocks for LLM API responses for testing"
+"Add type checking with mypy to the project"
+"Test that RugbyStatsScraper properly extends BaseLLMScraper"
+"Create fixtures for ScrapingPlan and ValidationResult"
+"Write integration test for complete 5-phase workflow"
+"Add pre-commit hooks for code quality checks"
+"Test framework with a mock domain scraper implementation"
 ```
 
 ---
@@ -331,88 +355,107 @@ This document defines specialized AI agents for managing and extending the Rugby
 **Role:** Speed, efficiency, and scalability expert
 
 **Expertise:**
-- Code optimization and profiling
-- Parallel processing and concurrency
-- Memory management
-- Batch processing strategies
-- Caching and data reuse
-- LLM API cost optimization
+- Code profiling and optimization (cProfile)
+- Async/await patterns for I/O operations
+- Caching strategies (LRU, Redis)
+- Batch processing and parallelization
+- Memory optimization
+- LLM API cost reduction
+- Browser instance reuse
 
 **Responsibilities:**
-- Optimize scraper performance
-- Implement batch processing for large datasets
-- Add progress bars and status updates
-- Reduce memory footprint
-- Implement retry logic for failed requests
-- Cache frequently accessed data
-- Optimize LLM API call frequency
-- Balance speed vs. accuracy tradeoffs
+- **Framework Performance:** Optimize core framework
+  - Async scraping support
+  - Browser session reuse
+  - LLM response caching
+  - Efficient data structures
+- **Domain Performance:** Optimize domain implementations
+  - Batch processing strategies
+  - Parallel scraping (when safe)
+  - Regex optimization
+- **API Optimization:** Reduce LLM costs
+  - Response caching
+  - Batch validation requests
+  - Smarter retry logic
+- **Monitoring:** Add performance metrics
 
 **Key Files:**
-- All Python scripts (optimization targets)
-- Performance profiling outputs (to be created)
+- All `llm_scraper/` modules (optimization targets)
+- Domain scraper implementations
+- Performance profiling scripts (future)
 
 **Prompts to Use:**
 ```
-"Add parallel processing to scrape 10 matches simultaneously"
-"Implement a progress bar for the scraping process"
-"Optimize memory usage when processing 500+ matches"
-"Add retry logic for network timeouts"
-"Cache ChromeDriver instances to reduce startup time"
-"Reduce LLM API calls by batching validation requests"
-"Optimize the hybrid approach: use intelligent agent for discovery only"
-"Profile the intelligent agent to find bottlenecks"
+"Add caching for LLM responses in llm_agent.py to reduce API costs"
+"Refactor PhaseExecutor to support async operations"
+"Optimize browser management to reuse driver instances"
+"Profile rugby scraper and identify bottlenecks"
+"Add batch validation to validate multiple matches at once"
+"Implement connection pooling for API requests"
+"Add progress tracking to BaseLLMScraper.scrape_multiple()"
+"Optimize regex patterns in PairwiseStatExtractor"
 ```
 
 ---
 
 ## 🎯 Agent Collaboration Scenarios
 
-### Scenario 1: Adding New Statistics (With LLM Validation)
+### Scenario 1: Adding New Domain Scraper (e.g., Football)
 
-1. **Data Collection Agent**: Identifies new field on RugbyPass
-2. **Data Architecture Agent**: Designs schema for new field
-3. **Data Collection Agent**: Implements extraction logic in basic scraper
-4. **LLM Intelligence Agent**: Adds validation rules for new field
-5. **Quality Assurance Agent**: Validates extraction accuracy
-6. **Project Manager Agent**: Updates documentation
+1. **Project Manager Agent**: Plans football scraper implementation
+2. **LLM Framework Agent**: Reviews framework readiness
+3. **Data Architecture Agent**: Designs football data models
+4. **Domain Implementation Agent**: Creates `football_scraper/`
+   - Extends BaseLLMScraper
+   - Implements required abstract methods
+   - Creates FootballStatsExtractor
+5. **Quality Assurance Agent**: Tests football scraper implementation
+6. **Project Manager Agent**: Documents football scraper in README
 
-### Scenario 2: Historical Data Collection (Unknown URLs)
+### Scenario 2: Framework Enhancement (Add New LLM Provider)
 
-1. **Project Manager Agent**: Plans phased approach (2024 → 2023 → ...)
-2. **LLM Intelligence Agent**: Discovers URLs automatically using AI reasoning
-3. **Integration Agent**: Finds available data sources
-4. **LLM Intelligence Agent**: Scrapes matches with self-correction
-5. **Quality Assurance Agent**: Validates completeness and quality
-6. **Data Analysis Agent**: Analyzes trends over time
+1. **LLM Framework Agent**: Designs provider abstraction
+2. **Data Architecture Agent**: Updates config schema for multi-provider
+3. **LLM Framework Agent**: Implements OpenAI support in llm_agent.py
+4. **Quality Assurance Agent**: Tests with both Gemini and OpenAI
+5. **Domain Implementation Agent**: Updates domain configs for provider choice
+6. **Project Manager Agent**: Documents provider configuration
 
-### Scenario 3: Performance Issues
+### Scenario 3: Performance Optimization
 
-1. **Quality Assurance Agent**: Identifies slow scraping
-2. **Performance Optimization Agent**: Profiles bottlenecks
-3. **Project Manager Agent**: Decides on hybrid approach
-4. **LLM Intelligence Agent**: Used for URL discovery phase only
-5. **Data Collection Agent**: Used for bulk scraping with known URLs
-6. **Quality Assurance Agent**: Validates no data loss
-7. **Project Manager Agent**: Documents improvements
+1. **Quality Assurance Agent**: Identifies slow LLM API calls
+2. **Performance Optimization Agent**: Profiles the workflow
+3. **LLM Framework Agent**: Adds response caching to llm_agent.py
+4. **Performance Optimization Agent**: Implements async operations
+5. **Quality Assurance Agent**: Validates no functionality loss
+6. **Project Manager Agent**: Documents performance improvements
 
-### Scenario 4: Data Quality Concerns
+### Scenario 4: Rugby Scraper Enhancement
 
-1. **Quality Assurance Agent**: Identifies suspicious data
-2. **LLM Intelligence Agent**: Re-validates data with confidence scores
-3. **Data Architecture Agent**: Reviews validation rules
-4. **LLM Intelligence Agent**: Self-corrects and re-scrapes problematic matches
-5. **Quality Assurance Agent**: Confirms improved data quality
-6. **Project Manager Agent**: Packages validated deliverable
+1. **Domain Implementation Agent**: Identifies new stat (player subs)
+2. **Data Architecture Agent**: Designs substitution data schema
+3. **Domain Implementation Agent**: Updates rugby extractors
+4. **Domain Implementation Agent**: Updates validation prompt
+5. **Quality Assurance Agent**: Tests with real matches
+6. **Project Manager Agent**: Updates rugby scraper documentation
 
 ### Scenario 5: Website Structure Change
 
-1. **Data Collection Agent**: Basic scraper starts failing
+1. **Domain Implementation Agent**: Rugby scraper starts failing
 2. **Quality Assurance Agent**: Identifies pattern of failures
-3. **LLM Intelligence Agent**: Automatically adapts to new structure
-4. **Data Collection Agent**: Updates basic scraper regex patterns
-5. **Quality Assurance Agent**: Validates both scrapers work
+3. **Domain Implementation Agent**: Updates regex patterns in extractors
+4. **LLM Framework Agent**: Ensures validation prompt handles changes
+5. **Quality Assurance Agent**: Validates scraper works again
 6. **Project Manager Agent**: Documents the changes
+
+### Scenario 6: New Framework Feature (Data Validators)
+
+1. **LLM Framework Agent**: Designs generic validator base class
+2. **Data Architecture Agent**: Creates validation schemas
+3. **LLM Framework Agent**: Implements in `llm_scraper/utils/validators.py`
+4. **Domain Implementation Agent**: Creates rugby-specific validators
+5. **Quality Assurance Agent**: Tests validators with various data
+6. **Project Manager Agent**: Updates FRAMEWORK.md with validator guide
 
 ---
 
@@ -420,59 +463,91 @@ This document defines specialized AI agents for managing and extending the Rugby
 
 ### When Starting a Task:
 
-1. Identify which agent role best fits the task
-2. Decide if you need basic scraper or intelligent agent
-3. Assume that agent's expertise and perspective
-4. Reference the agent's key files and responsibilities
-4. Use suggested prompts as templates
+1. **Identify task type:** Framework or domain work?
+2. **Select appropriate agent** based on task type
+3. **Assume that agent's expertise** and perspective
+4. **Reference key files** in agent's responsibility area
+5. **Use suggested prompts** as templates
 
-### Example Usage 1: Known URLs (Basic Scraper)
+### Framework vs Domain Decision Tree
 
-**User Request:** "Scrape 15 Six Nations 2025 matches - I have all the URLs"
+```
+Is this about the generic framework?
+├─ YES → LLM Framework Agent, Data Architecture Agent, or Performance Agent
+└─ NO → Is it rugby-specific or a new domain?
+   ├─ Rugby → Domain Implementation Agent (Rugby)
+   └─ New Domain → Domain Implementation Agent + Project Manager Agent
+```
 
-**Agent Selection:** Data Collection Agent (primary)
+### Example Usage 1: Building a Cricket Scraper
 
-**Approach:**
-1. [Data Collection Agent] Load URLs from `matches_to_scrape.json`
-2. [Data Collection Agent] Run basic scraper (fast, free)
-3. [Quality Assurance Agent] Validate output
-4. [Project Manager Agent] Update progress report
+**User Request:** "I want to scrape cricket match statistics from ESPN"
 
-**Time:** ~5 minutes
-**Cost:** $0
-
-### Example Usage 2: Unknown URLs (Intelligent Agent)
-
-**User Request:** "Find and scrape all 2024 Rugby Championship matches"
-
-**Agent Selection:** LLM Intelligence Agent (primary) + Quality Assurance Agent
+**Agent Selection:** Domain Implementation Agent (primary) + Data Architecture Agent
 
 **Approach:**
-1. [LLM Intelligence Agent] Create match list with just team names and dates
-2. [LLM Intelligence Agent] Run intelligent scraper (discovers URLs automatically)
-3. [LLM Intelligence Agent] Self-validates and corrects errors
-4. [Quality Assurance Agent] Review agent decision logs
-5. [Project Manager Agent] Update progress report
+1. [Project Manager Agent] Plan cricket scraper implementation
+2. [Data Architecture Agent] Design cricket data models (runs, wickets, overs, etc.)
+3. [Domain Implementation Agent] Create `cricket_scraper/` directory
+4. [Domain Implementation Agent] Implement CricketScraper(BaseLLMScraper)
+5. [Domain Implementation Agent] Implement 4 required abstract methods
+6. [Quality Assurance Agent] Test with sample matches
+7. [Project Manager Agent] Document in README
 
-**Time:** ~30 minutes for 12 matches
-**Cost:** ~$0.12-0.60
+**Time:** ~2-3 hours for complete implementation
+**Files Created:** cricket_scraper/cricket_scraper.py, cricket_scraper/extractors.py, cricket_scraper/config.yml
 
-### Example Usage 3: Hybrid Approach (Best of Both)
+### Example Usage 2: Adding LLM Response Caching
 
-**User Request:** "Collect all 2020-2024 data (400+ matches)"
+**User Request:** "LLM API costs are high. Add caching to reduce duplicate calls"
 
-**Agent Selection:** LLM Intelligence Agent → Data Collection Agent
+**Agent Selection:** LLM Framework Agent + Performance Optimization Agent
 
 **Approach:**
-1. [Project Manager Agent] Plan phased approach
-2. [LLM Intelligence Agent] Phase 1: Discover URLs for all matches (~2-3 hours)
-3. [Integration Agent] Export discovered URLs to JSON
-4. [Data Collection Agent] Phase 2: Bulk scrape with basic scraper (fast)
-5. [Quality Assurance Agent] Validate completeness
-6. [Data Analysis Agent] Analyze trends
+1. [Performance Optimization Agent] Analyze LLM call patterns
+2. [LLM Framework Agent] Design cache layer in llm_agent.py
+3. [LLM Framework Agent] Implement LRU cache for responses
+4. [Data Architecture Agent] Update config for cache settings
+5. [Quality Assurance Agent] Test with repeated scrapes
+6. [Project Manager Agent] Document caching in FRAMEWORK.md
 
-**Time:** Phase 1: 2-3 hours, Phase 2: 30 minutes
-**Cost:** ~$2-5 for discovery, then free for bulk scraping
+**Time:** ~1-2 hours
+**Impact:** 40-60% reduction in API calls for repeated scrapes
+
+### Example Usage 3: Enhancing Rugby Scraper
+
+**User Request:** "Add player substitution tracking to rugby scraper"
+
+**Agent Selection:** Domain Implementation Agent (primary) + Data Architecture Agent
+
+**Approach:**
+1. [Data Architecture Agent] Design substitution data schema
+2. [Domain Implementation Agent] Update rugby_scraper/extractors.py
+3. [Domain Implementation Agent] Add extraction patterns for substitutions
+4. [Domain Implementation Agent] Update validation prompt to check subs data
+5. [Quality Assurance Agent] Test with matches that have substitutions
+6. [Project Manager Agent] Document new feature
+
+**Time:** ~30-45 minutes
+**Files Modified:** rugby_scraper/extractors.py, rugby_scraper/rugby_scraper.py
+
+### Example Usage 4: Framework Refactoring
+
+**User Request:** "Add support for async/await to make scraping faster"
+
+**Agent Selection:** LLM Framework Agent + Performance Optimization Agent
+
+**Approach:**
+1. [Project Manager Agent] Plan async refactoring strategy
+2. [Performance Optimization Agent] Profile current performance
+3. [LLM Framework Agent] Refactor base_scraper.py for async
+4. [LLM Framework Agent] Update phases.py for async workflow
+5. [Domain Implementation Agent] Update rugby scraper to use async
+6. [Quality Assurance Agent] Test async and sync both work
+7. [Project Manager Agent] Update FRAMEWORK.md with async guide
+
+**Time:** ~4-6 hours (major refactoring)
+**Impact:** 2-3x faster for I/O-bound operations
 
 ---
 
@@ -606,13 +681,26 @@ Need data quality validation?
 
 ---
 
-**Last Updated:** November 13, 2025  
-**Version:** 2.0 (Added LLM Intelligence Agent)  
+**Last Updated:** November 14, 2025
+**Version:** 3.0 (Framework Refactoring)
 **Maintained by:** Project Manager Agent
 
-**Breaking Changes from v1.0:**
+**Changes in v3.0:**
+- ✅ Complete refactoring into generic framework + domain implementation
+- ✅ Renamed "LLM Intelligence Agent" → "LLM Framework Agent" (framework focus)
+- ✅ Renamed "Data Collection Agent" → "Domain Implementation Agent" (domain focus)
+- ✅ Updated all agents for framework vs domain separation
+- ✅ New collaboration scenarios for framework development
+- ✅ Updated file references to new modular structure
+- ✅ Added framework-specific prompts and examples
+
+**Breaking Changes from v2.0:**
+- Agent responsibilities completely reorganized around framework architecture
+- File paths updated (llm_scraper/ vs rugby_scraper/)
+- New focus on framework extensibility and reusability
+- Domain work clearly separated from framework work
+
+**Changes in v2.0:**
 - Added LLM Intelligence Agent as primary agent for advanced scraping
-- Renamed "Data Collection Agent" to distinguish basic vs intelligent scraping
 - Added hybrid approach workflows
-- Added agent decision log analysis to Quality Assurance Agent
-- Updated all collaboration scenarios to include LLM agent
+- Added agent decision log analysis
